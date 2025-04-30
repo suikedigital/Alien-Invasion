@@ -1,0 +1,17 @@
+{
+    "screen_width":400,
+    "screen_height": 800,
+    "bg_color": [230, 230, 230],
+    "ship_limit": 3,
+    "bullet_width": 300,
+    "bullet_height": 15,
+    "bullet_color": [60, 60, 60],
+    "bullets_allowed": 3,
+    "fleet_drop_speed": 10,
+    "alien_points": 50,
+    "fleet_direction": 1,
+    "speedup_scale": 1.1,
+    "score_scale": 1.5,
+    "frame_rate": 60
+}
+

@@ -1,0 +1,64 @@
+import pygame 
+
+from entities.alien import Alien
+
+class FleetManager:
+    """A class to manage the fleet of aliens."""
+    
+    def __init__(self, game_logic):
+        """Initialise the fleet manager."""
+        self.game_logic = game_logic
+        self.settings = game_logic.settings
+        self.aliens = pygame.sprite.Group()
+        self.asset_manager = game_logic.asset_manager
+        self.ship = game_logic.ship
+
+    def create_fleet(self):
+        """Create a fleet of aliens."""
+        alien = Alien(self.game_logic, self.asset_manager)
+        alien_width, alien_height = alien.rect.width, alien.rect.height
+        number_aliens_x = self._get_number_aliens_x(alien_width)
+        number_of_available_rows = self._get_number_rows(alien_height)
+
+        for row_number in range(number_of_available_rows):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number * 2 * alien_width, row_number * 2 * alien_height)
+
+    def _get_number_aliens_x(self, alien_width):
+        """Calculate the number of aliens that fit in a row."""
+        available_space_x = self.settings.screen_width - 2 * alien_width
+        return available_space_x // (2 * alien_width)
+    
+    def get_number_of_available_rows(self, alien_height):
+        """Calculate the number of rows of aliens that fit on the screen."""
+        available_space_y = (self.settings.screen_height - (3 * alien_height) - self.ship.rect.height)
+        return available_space_y // (2 * alien_height)
+
+    def _create_alien(self, x_position, y_position):
+        """Create an alien and place it in the row."""
+        new_alien = Alien(self)
+        new_alien.x = x_position
+        new_alien.rect.x = x_position
+        new_alien.rect.y = y_position
+        self.aliens.add(new_alien)
+
+    def _update_aliens(self):
+        """Check if the fleet is at an edge, then update positions"""
+        self._check_fleet_edges()
+        self.aliens.update()
+        self._check_ship_alien_collisions()
+        self._check_aliens_bottom()
+
+    def _check_fleet_edges(self):
+        """Respond appropriately if any aliens have reached an edge"""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop the enitre fleet and change the fleet's direction."""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+        

@@ -1,11 +1,11 @@
-import pygame
 from pygame.sprite import Sprite
+from assets.utils import AssetManager
 
 
 class Ship(Sprite):
     """A class to manage the ship."""
     
-    def __init__(self, ai_game):
+    def __init__(self, ai_game, asset_manager):
         """Initialise the ship and set its starting position."""
         super().__init__()
         self.screen = ai_game.screen
@@ -13,7 +13,7 @@ class Ship(Sprite):
         self.settings = ai_game.settings
 
         # Load the ship image and get its rect. 
-        self.image = pygame.image.load('images/ship.bmp')
+        self.image = asset_manager.load_image('assets/images/ship.bmp')
         self.rect = self.image.get_rect()
 
         # Start each new ship at the bottom center of the screen.
@@ -22,10 +22,9 @@ class Ship(Sprite):
         # Store a float for the ship's exact horizontal position. 
         self.x = float(self.rect.x)
 
-            # Movement flag; start with a ship that's not moving.
+        # Movement flag; start with a ship that's not moving.
         self.moving_right = False
         self.moving_left = False
-
 
     def update(self):
         """Update the ship's position based on the movement flag."""
@@ -45,4 +44,5 @@ class Ship(Sprite):
         """Center the ship on the screen."""
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = float(self.rect.x)
+
 
